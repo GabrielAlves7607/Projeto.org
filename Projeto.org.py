@@ -74,7 +74,8 @@ root = tk.Tk()
 root.title("Interface Dinâmica")
 root.geometry("1024x768")
 root.configure(bg="#2e2e2e")
-
+root.maxsize(width = 1280, height = 720)
+root.minsize(width = 980, height = 900)
 
 # Criar frames
 frame1 = tk.Frame(root, bg="#2e2e2e")
