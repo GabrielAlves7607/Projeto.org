@@ -1,7 +1,7 @@
 import tkinter as tk
 
 root = tk.Tk()
-root.title("Interface Dark Mode")
+root.title("Projeto.org")
 root.geometry("800x600")  # Tamanho da janela
 
 # Definindo a cor de fundo da janela para um tom escuro
