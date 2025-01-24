@@ -68,6 +68,7 @@ def Botão_3():
 def Botão_4():
     print("Funcionou 4")
 
+
 # Configuração da janela principal
 root = tk.Tk()
 root.title("Interface Dinâmica")
@@ -96,18 +97,22 @@ tk.Label(frame2, text="ID:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place
 entry_id = tk.Entry(frame2, font=("Arial", 12))
 entry_id.place(x=100, y=20, width=100)
 
+
 tk.Label(frame2, text="Nome:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=250, y=20)
 entry_nome = tk.Entry(frame2, font=("Arial", 12))
 entry_nome.place(x=310, y=20, width=200)
+
 
 tk.Label(frame2, text="Idade:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=550, y=20)
 entry_idade = tk.Entry(frame2, font=("Arial", 12))
 entry_idade.place(x=620, y=20, width=100)
 
+
 tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=50, y=60)
 tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=150, y=60)
 tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=250, y=60)
 tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=350, y=60)
+
 
 
 # Criar tabela no frame2
@@ -118,9 +123,11 @@ tabela.heading("Nome", text="Nome")
 tabela.heading("Idade", text="Idade")
 
 
+
 tabela.column("ID", width=100, anchor="center")
 tabela.column("Nome", width=250, anchor="w")
 tabela.column("Idade", width=100, anchor="center")
+
 
 
 style = ttk.Style()
@@ -131,6 +138,7 @@ style.configure("Treeview",
                 fieldbackground="#3b3b3b",
                 rowheight=25)
 style.map("Treeview", background=[("selected", "#1f77b4")])
+
 
 tabela.place(x=50, y=150, width=900, height=500)
 criar_tabela()
