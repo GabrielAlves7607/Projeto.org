@@ -1,13 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-
 # Função para alternar entre frames
 def mostrar_frame(frame):
     frame.tkraise()
 
-
-# Função para criar a tabela (Frame 2)
 def criar_tabela():
     dados = [
         (1, "Fulano", 25),
@@ -17,8 +14,6 @@ def criar_tabela():
     for item in dados:
         tabela.insert("", tk.END, values=item)
 
-
-# Função para adicionar dados à tabela
 def adicionar_dados():
     id_valor = entry_id.get()
     nome_valor = entry_nome.get()
@@ -32,8 +27,6 @@ def adicionar_dados():
     else:
         messagebox.showwarning("Aviso", "Preencha todos os campos para adicionar um item!")
 
-
-# Função para remover dados selecionados na tabela
 def remover_dados():
     selecionado = tabela.selection()
     if selecionado:
@@ -41,8 +34,6 @@ def remover_dados():
     else:
         messagebox.showwarning("Aviso", "Selecione um item para remover!")
 
-
-# Função para editar dados selecionados na tabela
 def editar_dados():
     selecionado = tabela.selection()
     if selecionado:
@@ -59,8 +50,6 @@ def editar_dados():
     else:
         messagebox.showwarning("Aviso", "Selecione um item para editar!")
 
-
-# Função para ativar a edição de células na tabela
 def editar_celula(event):
     # Obter o item selecionado e a coluna clicada
     item_selecionado = tabela.selection()
@@ -92,7 +81,6 @@ def editar_celula(event):
         entry_edit.bind('<Return>', salvar_edicao)
         entry_edit.focus()
 
-
 def abrir_janela_config():
     nova_janela = tk.Toplevel(root)
     nova_janela.title("Configurações")
@@ -104,23 +92,20 @@ def abrir_janela_config():
     tk.Button(nova_janela, text="Fechar", command=nova_janela.destroy, bg="#3b3b3b", fg="white", font=("Arial", 12)).place(x=25, y=250)
 
 
-# Função para criar o Frame 1 (Interface Principal)
 def criar_frame1(root):
     global frame1
     frame1 = tk.Frame(root, bg="#2e2e2e")
     frame1.place(relx=0, rely=0, relwidth=1, relheight=1)
     
-    tk.Label(frame1, text="Frame 1", bg="#2e2e2e", fg="white", font=("Arial", 24)).place(x=50, y=100)
+    tk.Label(frame1, text="Interface inicial", bg="#2e2e2e", fg="white", font=("Arial", 24)).place(x=50, y=100)
     
-    tk.Button(frame1, text="Frame 2", command=lambda: mostrar_frame(frame2), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=50, y=25)
-    tk.Button(frame1, text="Frame 3", command=lambda: criar_frame3(root), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=200, y=25)
-    tk.Button(frame1, text="Frame 4", command=lambda: criar_frame4(root), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=350, y=25)
-    tk.Button(frame1, text="Frame 5", command=lambda: criar_frame5(root), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=500, y=25)
+    tk.Button(frame1, text="Tabela", command=lambda: mostrar_frame(frame2), fg="white", bg="#5f5f5f", font=("Arial", 16, "bold"), relief="raised").place(x=50, y=25)
+    tk.Button(frame1, text="Notificações", command=lambda: criar_frame3(root), fg="white", bg="#5f5f5f", font=("Arial", 16, "bold"),relief="raised").place(x=175, y=25)
+    tk.Button(frame1, text="Em andamento 4 ", command=lambda: criar_frame4(root), fg="white", bg="#5f5f5f", font=("Arial", 16, "bold"), relief="raised").place(x=350, y=25)
+    tk.Button(frame1, text="Em andamento 5", command=lambda: criar_frame5(root), fg="white", bg="#5f5f5f", font=("Arial", 16, "bold"), relief="raised").place(x=575, y=25)
 
-    tk.Button(frame1, text="Config", command=abrir_janela_config, fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=900, y=25)
+    tk.Button(frame1, text="Config", command=abrir_janela_config, fg="white", bg="#5f5f5f", font=("Arial", 16, "bold"), relief="raised").place(x=900, y=25)
 
-
-# Função para criar o Frame 2 (Tabela)
 def criar_frame2(root):
     global frame2, entry_id, entry_nome, entry_idade, tabela
 
@@ -139,10 +124,10 @@ def criar_frame2(root):
     entry_idade = tk.Entry(frame2, font=("Arial", 12))
     entry_idade.place(x=620, y=20, width=100)
 
-    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=50, y=60)
-    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=150, y=60)
-    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=250, y=60)
-    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=350, y=60)
+    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=50, y=60)
+    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=150, y=60)
+    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=250, y=60)
+    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=350, y=60)
 
     colunas = ("ID", "Nome", "Idade")
     tabela = ttk.Treeview(frame2, columns=colunas, show="headings")
@@ -163,8 +148,6 @@ def criar_frame2(root):
     tabela.bind("<Double-1>", editar_celula)  # Duplo clique para editar células
     criar_tabela()
 
-
-# Função para criar o Frame 3 (Notificações)
 def criar_frame3(root):
     global frame3
     frame3 = tk.Frame(root, bg="#2e2e2e")
@@ -182,8 +165,6 @@ def criar_frame3(root):
     
     tk.Button(frame3, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(relx=0.95, rely=0.05, anchor="ne")
 
-
-#Função para criar o Frame 4 (Em andamento)
 def criar_frame4(root):
     global frame4
     frame4 = tk.Frame(root, bg="#2e2e2e")
@@ -192,8 +173,6 @@ def criar_frame4(root):
 
     tk.Button(frame4, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(relx=0.95, rely=0.05, anchor="ne")
 
-
-#Função para criar o Frame 5 (Em andamento)
 def criar_frame5(root):
     global frame5
     frame5 = tk.Frame(root, bg="#2e2e2e")
@@ -210,7 +189,6 @@ root.configure(bg="#2e2e2e")
 root.maxsize(width=1280, height=720)
 root.minsize(width=800, height=600)
 
-
 # Criar frames
 criar_frame1(root)
 criar_frame2(root)
@@ -218,10 +196,8 @@ criar_frame3(root)
 criar_frame4(root)
 criar_frame5(root)
 
-
 # Exibir o primeiro frame
 mostrar_frame(frame1)
-
 
 # Iniciar o loop principal
 root.mainloop()
