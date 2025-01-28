@@ -124,10 +124,10 @@ def criar_frame2(root):
     entry_idade = tk.Entry(frame2, font=("Arial", 12))
     entry_idade.place(x=620, y=20, width=100)
 
-    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=50, y=60)
-    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=150, y=60)
-    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=250, y=60)
-    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(x=350, y=60)
+    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.05, rely=0.1)
+    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.15, rely=0.1)
+    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.245, rely=0.1)
+    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.34, rely=0.1)
 
     colunas = ("ID", "Nome", "Idade")
     tabela = ttk.Treeview(frame2, columns=colunas, show="headings")
