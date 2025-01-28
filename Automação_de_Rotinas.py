@@ -159,7 +159,7 @@ def criar_frame2(root):
     style.configure("Treeview", background="#3b3b3b", foreground="white", fieldbackground="#3b3b3b", rowheight=25)
     style.map("Treeview", background=[("selected", "#1f77b4")])
 
-    tabela.place(x=50, y=150, width=900, height=500)
+    tabela.place(relx=0.05 , rely=0.2, relwidth=0.9, relheight=0.5)
     tabela.bind("<Double-1>", editar_celula)  # Duplo clique para editar células
     criar_tabela()
 
