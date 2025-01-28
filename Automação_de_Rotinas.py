@@ -60,6 +60,50 @@ def editar_dados():
         messagebox.showwarning("Aviso", "Selecione um item para editar!")
 
 
+# Função para ativar a edição de células na tabela
+def editar_celula(event):
+    # Obter o item selecionado e a coluna clicada
+    item_selecionado = tabela.selection()
+    if not item_selecionado:
+        return
+
+    coluna = tabela.identify_column(event.x)  # Identifica a coluna clicada
+    linha = tabela.identify_row(event.y)      # Identifica a linha clicada
+
+    if linha and coluna:
+        coluna_index = int(coluna.replace('#', '')) - 1  # Remove '#' e ajusta para índice
+        item = tabela.item(linha)
+        valores = list(item['values'])
+
+        # Abrir uma Entry no local para edição
+        x, y, width, height = tabela.bbox(linha, column=coluna_index)
+        entry_edit = tk.Entry(frame2, font=("Arial", 12))
+        entry_edit.place(x=x, y=y + 150, width=width, height=height)
+        entry_edit.insert(0, valores[coluna_index])
+
+        # Função para salvar a edição
+        def salvar_edicao(event=None):
+            novos_valores = valores
+            novos_valores[coluna_index] = entry_edit.get()
+            tabela.item(linha, values=novos_valores)  # Atualizar os valores
+            entry_edit.destroy()
+
+        # Vincular a tecla Enter para salvar a edição
+        entry_edit.bind('<Return>', salvar_edicao)
+        entry_edit.focus()
+
+
+def abrir_janela_config():
+    nova_janela = tk.Toplevel(root)
+    nova_janela.title("Configurações")
+    nova_janela.geometry("400x300")
+    nova_janela.configure(bg="#2e2e2e")
+    
+    # Adicionar widgets na nova janela
+    tk.Label(nova_janela, text="janela de configurações!", bg="#2e2e2e", fg="white", font=("Arial", 14)).place(x=50, y=25)
+    tk.Button(nova_janela, text="Fechar", command=nova_janela.destroy, bg="#3b3b3b", fg="white", font=("Arial", 12)).place(x=25, y=250)
+
+
 # Função para criar o Frame 1 (Interface Principal)
 def criar_frame1(root):
     global frame1
@@ -73,47 +117,50 @@ def criar_frame1(root):
     tk.Button(frame1, text="Frame 4", command=lambda: criar_frame4(root), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=350, y=25)
     tk.Button(frame1, text="Frame 5", command=lambda: criar_frame5(root), fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=500, y=25)
 
+    tk.Button(frame1, text="Config", command=abrir_janela_config, fg="white", bg="#3b3b3b", font=("Arial", 16, "bold")).place(x=900, y=25)
+
 
 # Função para criar o Frame 2 (Tabela)
 def criar_frame2(root):
     global frame2, entry_id, entry_nome, entry_idade, tabela
-    
+
     frame2 = tk.Frame(root, bg="#2e2e2e")
     frame2.place(relx=0, rely=0, relwidth=1, relheight=1)
-    
+
     tk.Label(frame2, text="ID:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=50, y=20)
     entry_id = tk.Entry(frame2, font=("Arial", 12))
     entry_id.place(x=100, y=20, width=100)
-    
+
     tk.Label(frame2, text="Nome:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=250, y=20)
     entry_nome = tk.Entry(frame2, font=("Arial", 12))
     entry_nome.place(x=310, y=20, width=200)
-    
+
     tk.Label(frame2, text="Idade:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=550, y=20)
     entry_idade = tk.Entry(frame2, font=("Arial", 12))
     entry_idade.place(x=620, y=20, width=100)
-    
+
     tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=50, y=60)
     tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=150, y=60)
     tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=250, y=60)
     tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(x=350, y=60)
-    
+
     colunas = ("ID", "Nome", "Idade")
     tabela = ttk.Treeview(frame2, columns=colunas, show="headings")
     tabela.heading("ID", text="ID")
     tabela.heading("Nome", text="Nome")
     tabela.heading("Idade", text="Idade")
-    
+
     tabela.column("ID", width=100, anchor="center")
     tabela.column("Nome", width=250, anchor="w")
     tabela.column("Idade", width=100, anchor="center")
-    
+
     style = ttk.Style()
     style.theme_use("clam")
     style.configure("Treeview", background="#3b3b3b", foreground="white", fieldbackground="#3b3b3b", rowheight=25)
     style.map("Treeview", background=[("selected", "#1f77b4")])
-    
+
     tabela.place(x=50, y=150, width=900, height=500)
+    tabela.bind("<Double-1>", editar_celula)  # Duplo clique para editar células
     criar_tabela()
 
 
@@ -157,11 +204,11 @@ def criar_frame5(root):
 
 # Configuração da janela principal
 root = tk.Tk()
-root.title("Interface Dinâmica")
+root.title("")
 root.geometry("1024x768")
 root.configure(bg="#2e2e2e")
 root.maxsize(width=1280, height=720)
-root.minsize(width=900, height=600)
+root.minsize(width=800, height=600)
 
 
 # Criar frames
