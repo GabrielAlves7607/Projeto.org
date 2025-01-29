@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
+janela_config = None  # Variável global
+
 # Função para alternar entre frames
 def mostrar_frame(frame):
     frame.tkraise()
@@ -82,15 +84,27 @@ def editar_celula(event):
         entry_edit.focus()
 
 def abrir_janela_config():
-    nova_janela = tk.Toplevel(root)
-    nova_janela.title("Configurações")
-    nova_janela.geometry("400x300")
-    nova_janela.configure(bg="#2e2e2e")
+    global janela_config
+
+    if janela_config and tk.Toplevel.winfo_exists(janela_config):  # Se a janela já existe, traz para frente
+        janela_config.lift()
+        return
+
+    janela_config = tk.Toplevel(root)
+    janela_config.title("Configurações")
+    janela_config.geometry("400x300")
+    janela_config.configure(bg="#2e2e2e")
     
     # Adicionar widgets na nova janela
-    tk.Label(nova_janela, text="janela de configurações!", bg="#2e2e2e", fg="white", font=("Arial", 14)).place(x=50, y=25)
-    tk.Button(nova_janela, text="Fechar", command=nova_janela.destroy, bg="#3b3b3b", fg="white", font=("Arial", 12)).place(x=25, y=250)
+    tk.Label(janela_config, text="Janela de configurações!", bg="#2e2e2e", fg="white", font=("Arial", 14)).place(x=50, y=25)
+    
+    tk.Button(janela_config, text="Fechar", command=lambda: fechar_janela_config(), bg="#3b3b3b", fg="white", font=("Arial", 12)).place(x=25, y=250)
 
+def fechar_janela_config():
+    global janela_config
+    if janela_config:
+        janela_config.destroy()
+        janela_config = None  # Resetar variável quando a janela for fechada
 
 def criar_frame1(root):
     global frame1
