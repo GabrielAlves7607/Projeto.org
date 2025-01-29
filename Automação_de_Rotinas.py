@@ -52,36 +52,39 @@ def editar_dados():
     else:
         messagebox.showwarning("Aviso", "Selecione um item para editar!")
 
+#--------------------------------------------------#
+
 def editar_celula(event):
-    # Obter o item selecionado e a coluna clicada
     item_selecionado = tabela.selection()
     if not item_selecionado:
         return
 
-    coluna = tabela.identify_column(event.x)  # Identifica a coluna clicada
-    linha = tabela.identify_row(event.y)      # Identifica a linha clicada
+    # Obtém a posição do clique
+    coluna = tabela.identify_column(event.x)
+    linha = tabela.identify_row(event.y)
+    
+    if not linha or not coluna:
+        return
 
-    if linha and coluna:
-        coluna_index = int(coluna.replace('#', '')) - 1  # Remove '#' e ajusta para índice
-        item = tabela.item(linha)
-        valores = list(item['values'])
+    coluna_index = int(coluna.replace("#", "")) - 1  # Transforma "#1" -> 0, "#2" -> 1, etc.
+    item = tabela.item(linha)
+    valores = list(item["values"])
 
-        # Abrir uma Entry no local para edição
-        x, y, width, height = tabela.bbox(linha, column=coluna_index)
-        entry_edit = tk.Entry(frame2, font=("Arial", 12))
-        entry_edit.place(x=x, y=y + 150, width=width, height=height)
-        entry_edit.insert(0, valores[coluna_index])
+    # Criar um campo Entry sobre a célula clicada
+    x, y, largura, altura = tabela.bbox(linha, column=coluna_index)
+    entry_edit = tk.Entry(frame2, font=("Arial", 12))
+    entry_edit.place(x=x+50, y=y+200, width=largura, height=altura)  # Ajuste a posição
+    entry_edit.insert(0, valores[coluna_index])
 
-        # Função para salvar a edição
-        def salvar_edicao(event=None):
-            novos_valores = valores
-            novos_valores[coluna_index] = entry_edit.get()
-            tabela.item(linha, values=novos_valores)  # Atualizar os valores
-            entry_edit.destroy()
+    # Função para salvar a edição
+    def salvar_edicao(event=None):
+        valores[coluna_index] = entry_edit.get()
+        tabela.item(linha, values=valores)
+        entry_edit.destroy()
 
-        # Vincular a tecla Enter para salvar a edição
-        entry_edit.bind('<Return>', salvar_edicao)
-        entry_edit.focus()
+    entry_edit.bind("<Return>", salvar_edicao) 
+    entry_edit.focus()
+    tabela.bind("<Double-1>", editar_celula)
 
 def abrir_janela_config():
     global janela_config
@@ -105,6 +108,8 @@ def fechar_janela_config():
     if janela_config:
         janela_config.destroy()
         janela_config = None  # Resetar variável quando a janela for fechada
+
+#--------------------------------------------------#
 
 def criar_frame1(root):
     global frame1
@@ -195,12 +200,13 @@ def criar_frame5(root):
     
     tk.Button(frame5, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(relx=0.95, rely=0.05, anchor="ne")
 
+
 # Configuração da janela principal
 root = tk.Tk()
 root.title("")
 root.geometry("1024x768")
 root.configure(bg="#2e2e2e")
-root.maxsize(width=1280, height=720)
+root.maxsize(width=1980, height=1080)
 root.minsize(width=800, height=600)
 
 # Criar frames
