@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, Scrollbar, Frame
 
 janela_config = None  # Variável global
 
@@ -51,6 +51,11 @@ def editar_dados():
         tabela.delete(selecionado)
     else:
         messagebox.showwarning("Aviso", "Selecione um item para editar!")
+
+def limpa_dados():
+    entry_id.delete(0, tk.END)
+    entry_nome.delete(0, tk.END)
+    entry_idade.delete(0, tk.END)
 
 #--------------------------------------------------#
 
@@ -131,22 +136,30 @@ def criar_frame2(root):
     frame2 = tk.Frame(root, bg="#2e2e2e")
     frame2.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-    tk.Label(frame2, text="ID:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=50, y=20)
+    frame_1 = Frame(frame2, bd = 4, bg = '#dfe3ee', highlightbackground = '#759fe6', highlightthickness = 3 )
+    frame_1.place(relx = 0.02, rely = 0.08, relwidth = 0.96, relheight = 0.22)
+
+    frame_2 = Frame(frame2, bd = 4, bg = '#dfe3ee', highlightbackground = '#759fe6', highlightthickness = 3 )
+    frame_2.place(relx = 0.02, rely = 0.33, relwidth = 0.96, relheight = 0.54)
+
+    tk.Label(frame2, text="ID:", bg = '#dfe3ee', fg="#2e2e2e", font=("Arial", 12)).place(x=70, y=90)
     entry_id = tk.Entry(frame2, font=("Arial", 12))
-    entry_id.place(x=100, y=20, width=100)
+    entry_id.place(x=100, y=90, width=100)
 
-    tk.Label(frame2, text="Nome:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=250, y=20)
+    tk.Label(frame2, text="Nome:", bg = '#dfe3ee', fg="#2e2e2e", font=("Arial", 12)).place(x=255, y=90)
     entry_nome = tk.Entry(frame2, font=("Arial", 12))
-    entry_nome.place(x=310, y=20, width=200)
+    entry_nome.place(x=310, y=90, width=200)
 
-    tk.Label(frame2, text="Idade:", bg="#2e2e2e", fg="white", font=("Arial", 12)).place(x=550, y=20)
+    tk.Label(frame2, text="Idade:", bg = '#dfe3ee', fg="#2e2e2e", font=("Arial", 12)).place(x=565, y=90)
     entry_idade = tk.Entry(frame2, font=("Arial", 12))
-    entry_idade.place(x=620, y=20, width=100)
+    entry_idade.place(x=620, y=90, width=100)
 
-    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.05, rely=0.1)
-    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.15, rely=0.1)
-    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.245, rely=0.1)
-    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.34, rely=0.1)
+    tk.Button(frame2, text="Adicionar", command=adicionar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.08, rely=0.2)
+    tk.Button(frame2, text="Remover", command=remover_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.18, rely=0.2)
+    tk.Button(frame2, text="Editar", command=editar_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.275, rely=0.2)
+    tk.Button(frame2, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.47, rely=0.2)
+    tk.Button(frame2, text="Limpar", command=limpa_dados, fg="white", bg="#5f5f5f", font=("Arial", 12), relief="raised").place(relx=0.37, rely=0.2)
+
 
     colunas = ("ID", "Nome", "Idade")
     tabela = ttk.Treeview(frame2, columns=colunas, show="headings")
@@ -163,8 +176,14 @@ def criar_frame2(root):
     style.configure("Treeview", background="#3b3b3b", foreground="white", fieldbackground="#3b3b3b", rowheight=25)
     style.map("Treeview", background=[("selected", "#1f77b4")])
 
-    tabela.place(relx=0.05 , rely=0.2, relwidth=0.9, relheight=0.5)
+    tabela.place(relx=0.04 , rely=0.35, relwidth=0.9, relheight=0.5)
     tabela.bind("<Double-1>", editar_celula)  # Duplo clique para editar células
+
+    scroolLista = Scrollbar(frame2, orient = 'vertical')
+    tabela.configure(yscroll = scroolLista.set)
+    scroolLista.place(relx = 0.94, rely = 0.35, relwidth = 0.02, relheight = 0.5)
+
+
     criar_tabela()
 
 def criar_frame3(root):
@@ -184,11 +203,14 @@ def criar_frame3(root):
     
     tk.Button(frame3, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(relx=0.95, rely=0.05, anchor="ne")
 
+
+
 def criar_frame4(root):
     global frame4
     frame4 = tk.Frame(root, bg="#2e2e2e")
     frame4.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+    
 
     tk.Button(frame4, text="Voltar", command=lambda: mostrar_frame(frame1), fg="white", bg="#3b3b3b", font=("Arial", 12)).place(relx=0.95, rely=0.05, anchor="ne")
 
