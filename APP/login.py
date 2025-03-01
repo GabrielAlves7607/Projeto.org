@@ -1,8 +1,63 @@
 import sys
+import sqlite3
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from login import UserDatabase  # Importando a classe UserDatabase do seu arquivo login.py
+from werkzeug.security import generate_password_hash, check_password_hash
+
+class UserDatabase:
+    def __init__(self, db_name='user_accounts.db'):
+        self.conn = sqlite3.connect(db_name)
+        self.cursor = self.conn.cursor()
+        self.create_table()
+
+    def create_table(self):
+        """Cria a tabela de usuários se não existir"""
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        ''')
+        self.conn.commit()
+
+    def add_user(self, username, password):
+        """Adiciona um novo usuário ao banco de dados"""
+        if self.user_exists(username):
+            print("Erro: Nome de usuário já existe. Escolha outro nome.")
+            return False
+        
+        hashed_password = generate_password_hash(password)
+        self.cursor.execute('''
+            INSERT INTO users (username, password)
+            VALUES (?, ?)
+        ''', (username, hashed_password))
+        self.conn.commit()
+        print(f"Usuário '{username}' cadastrado com sucesso!")
+        return True
+
+    def user_exists(self, username):
+        """Verifica se um usuário já existe no banco de dados"""
+        self.cursor.execute('''
+            SELECT 1 FROM users WHERE username = ?
+        ''', (username,))
+        return self.cursor.fetchone() is not None
+
+    def verify_user(self, username, password):
+        """Verifica se as credenciais do usuário estão corretas"""
+        self.cursor.execute('''
+            SELECT password FROM users WHERE username = ?
+        ''', (username,))
+        result = self.cursor.fetchone()
+        
+        if result and check_password_hash(result[0], password):
+            return True
+        return False
+
+    def close(self):
+        """Fecha a conexão com o banco de dados"""
+        self.conn.close()
 
 class LoginApp(QWidget):
     def __init__(self):
