@@ -1,4 +1,10 @@
 import sys
+import ensurepip
+import subprocess
+
+ensurepip.bootstrap()
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "instalar.txt"])
+
 import sqlite3
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QCheckBox
 from PyQt5.QtCore import Qt
