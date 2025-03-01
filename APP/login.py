@@ -2,8 +2,35 @@ import sys
 import ensurepip
 import subprocess
 
-ensurepip.bootstrap()
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "instalar.txt"])
+import sys
+import subprocess
+
+# Lista de pacotes que você deseja instalar
+pacotes = ["PyQt5", "werkzeug"]
+
+# Função para instalar pacotes
+def instalar_pacotes():
+    for pacote in pacotes:
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
+            print(f"Pacote '{pacote}' instalado com sucesso!")
+        except subprocess.CalledProcessError:
+            print(f"Erro ao instalar o pacote '{pacote}'.")
+
+# Verifica se os pacotes estão instalados e instala se necessário
+try:
+    from PyQt5.QtWidgets import QApplication, QWidget
+    from werkzeug.security import generate_password_hash, check_password_hash
+except ImportError:
+    print("Pacotes não encontrados. Instalando...")
+    instalar_pacotes()
+    # Recarrega o script após a instalação
+    print("Reiniciando o script...")
+    subprocess.check_call([sys.executable, __file__])
+    sys.exit()
+
+# Seu código principal aqui
+print("Todos os pacotes estão instalados. Iniciando o aplicativo...")
 
 import sqlite3
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QCheckBox
