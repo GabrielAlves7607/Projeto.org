@@ -1,8 +1,8 @@
 import sys
-import ensurepip
 import subprocess
+import os
 
-
+# Bibliotecas necessárias para o programa
 pacotes = ["PyQt5", "werkzeug"]
 
 
@@ -35,6 +35,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from werkzeug.security import generate_password_hash, check_password_hash
+
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 class UserDatabase:
@@ -152,6 +153,7 @@ class LoginApp(QWidget):
             }
         """)
 
+
         layout = QVBoxLayout()
 
 
@@ -208,6 +210,14 @@ class LoginApp(QWidget):
 
         if self.db.verify_user(email, password):
             QMessageBox.information(self, 'Sucesso', 'Login realizado com sucesso!')
+            # Fecha a janela de login
+            self.close()
+            # Executa o script Test_Pyqt5.py
+            caminho_script = os.path.join(os.path.dirname(__file__), "Test_Pyqt5.py")
+            if not os.path.isfile(caminho_script):
+                QMessageBox.warning(self, 'Erro', f"Arquivo '{caminho_script}' não encontrado.")
+                return
+            subprocess.Popen([sys.executable, caminho_script])
         else:
             QMessageBox.warning(self, 'Erro', 'Credenciais inválidas.')
 
