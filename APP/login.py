@@ -5,10 +5,10 @@ import subprocess
 import sys
 import subprocess
 
-# Lista de pacotes que você deseja instalar
+
 pacotes = ["PyQt5", "werkzeug"]
 
-# Função para instalar pacotes
+
 def instalar_pacotes():
     for pacote in pacotes:
         try:
@@ -17,20 +17,21 @@ def instalar_pacotes():
         except subprocess.CalledProcessError:
             print(f"Erro ao instalar o pacote '{pacote}'.")
 
-# Verifica se os pacotes estão instalados e instala se necessário
+
 try:
     from PyQt5.QtWidgets import QApplication, QWidget
     from werkzeug.security import generate_password_hash, check_password_hash
 except ImportError:
     print("Pacotes não encontrados. Instalando...")
     instalar_pacotes()
-    # Recarrega o script após a instalação
+
     print("Reiniciando o script...")
     subprocess.check_call([sys.executable, __file__])
     sys.exit()
 
-# Seu código principal aqui
+
 print("Todos os pacotes estão instalados. Iniciando o aplicativo...")
+
 
 import sqlite3
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QCheckBox
@@ -38,11 +39,14 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from werkzeug.security import generate_password_hash, check_password_hash
 
+#------------------------------------------------------------------------------------------------------------------------------------------
 class UserDatabase:
+
     def __init__(self, db_name='user_accounts.db'):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
         self.create_table()
+
 
     def create_table(self):
         """Cria a tabela de usuários se não existir"""
@@ -54,6 +58,7 @@ class UserDatabase:
             )
         ''')
         self.conn.commit()
+
 
     def add_user(self, username, password):
         """Adiciona um novo usuário ao banco de dados"""
@@ -70,12 +75,14 @@ class UserDatabase:
         print(f"Usuário '{username}' cadastrado com sucesso!")
         return True
 
+
     def user_exists(self, username):
         """Verifica se um usuário já existe no banco de dados"""
         self.cursor.execute('''
             SELECT 1 FROM users WHERE username = ?
         ''', (username,))
         return self.cursor.fetchone() is not None
+
 
     def verify_user(self, username, password):
         """Verifica se as credenciais do usuário estão corretas"""
@@ -88,15 +95,19 @@ class UserDatabase:
             return True
         return False
 
+
     def close(self):
         """Fecha a conexão com o banco de dados"""
         self.conn.close()
 
+#------------------------------------------------------------------------------------------------------------------------------------------
 class LoginApp(QWidget):
+
     def __init__(self):
         super().__init__()
         self.db = UserDatabase()  # Instanciando a classe UserDatabase
         self.initUI()
+
 
     def initUI(self):
         self.setWindowTitle('Login')
@@ -146,6 +157,7 @@ class LoginApp(QWidget):
 
         layout = QVBoxLayout()
 
+
         # Título "FAÇA SEU LOGIN"
         self.label_title = QLabel('FAÇA SEU LOGIN')
         self.label_title.setFont(QFont('Arial', 18, QFont.Bold))
@@ -188,6 +200,7 @@ class LoginApp(QWidget):
 
         self.setLayout(layout)
 
+
     def on_login(self):
         email = self.input_email.text()
         password = self.input_password.text()
@@ -201,6 +214,7 @@ class LoginApp(QWidget):
         else:
             QMessageBox.warning(self, 'Erro', 'Credenciais inválidas.')
 
+
     def on_register(self):
         email = self.input_email.text()
         password = self.input_password.text()
@@ -213,6 +227,7 @@ class LoginApp(QWidget):
             QMessageBox.information(self, 'Sucesso', f"Usuário '{email}' cadastrado com sucesso!")
         else:
             QMessageBox.warning(self, 'Erro', 'Nome de usuário já existe. Escolha outro nome.')
+
 
     def closeEvent(self, event):
         self.db.close()
