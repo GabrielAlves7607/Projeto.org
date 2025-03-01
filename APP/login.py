@@ -2,6 +2,7 @@ import sys
 import ensurepip
 import subprocess
 
+
 pacotes = ["PyQt5", "werkzeug"]
 
 
