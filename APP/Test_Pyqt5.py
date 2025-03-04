@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.modo_escuro = False  # Variável para armazenar o estado do tema
+        self.modo_escuro = True  # Garantindo que o modo inicial seja o escuro
         self.initUI()
     
     def initUI(self):
@@ -46,8 +46,7 @@ class MainApp(QMainWindow):
         self.btn_em_andamento4 = QPushButton("Em andamento 4")
         self.btn_em_andamento5 = QPushButton("Em andamento 5")
         self.btn_config = QPushButton("Configurações")
-        self.btn_tema = QPushButton("Modo Escuro")
-
+        
         # Conectando os botões às funções para alternar as páginas
         self.btn_inicial.clicked.connect(lambda: self.stack.setCurrentWidget(self.inicial_page))
         self.btn_tabela.clicked.connect(lambda: self.stack.setCurrentWidget(self.tabela_page))
@@ -55,7 +54,6 @@ class MainApp(QMainWindow):
         self.btn_em_andamento4.clicked.connect(lambda: self.stack.setCurrentWidget(self.em_andamento4_page))
         self.btn_em_andamento5.clicked.connect(lambda: self.stack.setCurrentWidget(self.em_andamento5_page))
         self.btn_config.clicked.connect(lambda: self.stack.setCurrentWidget(self.config_page))
-        self.btn_tema.clicked.connect(self.alternar_tema)  # Alterna entre modo claro e escuro
 
         # Layout para organizar os botões na parte inferior (horizontal)
         button_layout = QHBoxLayout()
@@ -65,7 +63,6 @@ class MainApp(QMainWindow):
         button_layout.addWidget(self.btn_em_andamento4)
         button_layout.addWidget(self.btn_em_andamento5)
         button_layout.addWidget(self.btn_config)
-        button_layout.addWidget(self.btn_tema)
 
         # Adicionando um espaçador para empurrar os botões para a esquerda
         button_layout.addStretch()
@@ -73,30 +70,31 @@ class MainApp(QMainWindow):
         # Adicionando o layout de botões na parte inferior do layout principal
         self.layout.addStretch()  # Adiciona um espaçador para empurrar os botões para baixo
         self.layout.addLayout(button_layout)
-    
-    def alternar_tema(self):
-        # Alterna entre modo claro e escuro
-        if self.modo_escuro:
-            estilo = """
-            QWidget { background-color: white; color: black; }
-            QPushButton { background-color: #DDD; color: black; border-radius: 5px; padding: 8px; }
-            QPushButton:hover { background-color: #BBB; }
-            QTableWidget { background-color: white; color: black; gridline-color: #CCC; }
-            QHeaderView::section { background-color: #EEE; color: black; padding: 5px; }
-            """
-            self.btn_tema.setText("Modo Escuro")
-        else:
-            estilo = """
-            QWidget { background-color: #2E2E2E; color: white; }
-            QPushButton { background-color: #444; color: white; border-radius: 5px; padding: 8px; }
-            QPushButton:hover { background-color: #555; }
-            QTableWidget { background-color: #3B3B3B; color: white; gridline-color: #555; }
-            QHeaderView::section { background-color: #444; color: white; padding: 5px; }
-            """
-            self.btn_tema.setText("Modo Claro")
+
+        # Aplica o tema escuro diretamente ao iniciar
+        self.aplicar_tema_escuro()
+
+    def aplicar_tema_escuro(self):
+        # Estilo do tema escuro
+        estilo = """
+        QWidget { background-color: #2E2E2E; color: white; }
+        QPushButton { background-color: #444; color: white; border-radius: 5px; padding: 8px; }
+        QPushButton:hover { background-color: #555; }
+        QTableWidget { background-color: #3B3B3B; color: white; gridline-color: #555; }
+        QHeaderView::section { background-color: #444; color: white; padding: 5px; }
+        """
         
+        # Aplica o estilo escuro
         self.setStyleSheet(estilo)
-        self.modo_escuro = not self.modo_escuro
+
+    def closeEvent(self, event):
+        # Janela de confirmação antes de fechar
+        resposta = QMessageBox.question(self, "Sair", "Tem certeza que deseja sair?",
+                                       QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if resposta == QMessageBox.Yes:
+            event.accept()  # Aceita o fechamento da janela
+        else:
+            event.ignore()  # Ignora o fechamento da janela
 
 # Páginas individuais da aplicação
 class InicialApp(QWidget):
@@ -116,8 +114,18 @@ class TabelaApp(QWidget):
         self.tabela.setHorizontalHeaderLabels(["ID", "Nome", "Idade"])
         self.tabela.setRowCount(3)
         
-        # Ajustando o tamanho da tabela
-        self.tabela.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # Definindo o tamanho fixo da tabela para melhorar a visualização
+        self.tabela.setFixedSize(1000, 600)  # Tamanho fixo para a tabela (largura 1000px, altura 600px)
+        
+        # Ajustando as larguras das colunas
+        self.tabela.setColumnWidth(0, 300)  # Largura da Coluna 1 (ID)
+        self.tabela.setColumnWidth(1, 350)  # Largura da Coluna 2 (Nome)
+        self.tabela.setColumnWidth(2, 350)  # Largura da Coluna 3 (Idade)
+        
+        # Ajustando a altura das linhas
+        self.tabela.setRowHeight(0, 50)
+        self.tabela.setRowHeight(1, 50)
+        self.tabela.setRowHeight(2, 50)
         
         # Adicionando dados na tabela
         dados = [("1", "Fulano", "25"), ("2", "Deltrano", "30"), ("3", "Ciclano", "22")]
@@ -153,6 +161,8 @@ class TabelaApp(QWidget):
         # Adicionando a tabela e os botões ao layout principal
         layout.addWidget(self.tabela)
         layout.addLayout(button_layout)
+        
+        
 
     def abrir_janela_edicao_cabecalhos(self):
         # Janela para editar cabeçalhos
