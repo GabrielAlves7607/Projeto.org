@@ -11,12 +11,13 @@ class MainApp(QMainWindow):
     def initUI(self):
         # Configurações iniciais da janela
         self.setWindowTitle("Sistema Completo com PyQt5")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1200, 800)  # Aumentei o tamanho da janela
         
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         
-        self.layout = QVBoxLayout(self.central_widget)  # Layout principal
+        # Layout principal (vertical)
+        self.layout = QVBoxLayout(self.central_widget)
         
         # Criando um widget para alternar entre páginas
         self.stack = QStackedWidget()
@@ -56,16 +57,21 @@ class MainApp(QMainWindow):
         self.btn_config.clicked.connect(lambda: self.stack.setCurrentWidget(self.config_page))
         self.btn_tema.clicked.connect(self.alternar_tema)  # Alterna entre modo claro e escuro
 
-        # Layout para organizar os botões
-        button_layout = QGridLayout()
-        button_layout.addWidget(self.btn_inicial, 0, 0)
-        button_layout.addWidget(self.btn_tabela, 0, 1)
-        button_layout.addWidget(self.btn_notificacoes, 0, 2)
-        button_layout.addWidget(self.btn_em_andamento4, 1, 0)
-        button_layout.addWidget(self.btn_em_andamento5, 1, 1)
-        button_layout.addWidget(self.btn_config, 1, 2)
-        button_layout.addWidget(self.btn_tema, 2, 1)
-        
+        # Layout para organizar os botões na parte inferior (horizontal)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.btn_inicial)
+        button_layout.addWidget(self.btn_tabela)
+        button_layout.addWidget(self.btn_notificacoes)
+        button_layout.addWidget(self.btn_em_andamento4)
+        button_layout.addWidget(self.btn_em_andamento5)
+        button_layout.addWidget(self.btn_config)
+        button_layout.addWidget(self.btn_tema)
+
+        # Adicionando um espaçador para empurrar os botões para a esquerda
+        button_layout.addStretch()
+
+        # Adicionando o layout de botões na parte inferior do layout principal
+        self.layout.addStretch()  # Adiciona um espaçador para empurrar os botões para baixo
         self.layout.addLayout(button_layout)
     
     def alternar_tema(self):
@@ -103,10 +109,15 @@ class TabelaApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
+        
+        # Tabela
         self.tabela = QTableWidget()
         self.tabela.setColumnCount(3)
         self.tabela.setHorizontalHeaderLabels(["ID", "Nome", "Idade"])
         self.tabela.setRowCount(3)
+        
+        # Ajustando o tamanho da tabela
+        self.tabela.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         # Adicionando dados na tabela
         dados = [("1", "Fulano", "25"), ("2", "Deltrano", "30"), ("3", "Ciclano", "22")]
@@ -114,7 +125,84 @@ class TabelaApp(QWidget):
             self.tabela.setItem(row, 0, QTableWidgetItem(id_val))
             self.tabela.setItem(row, 1, QTableWidgetItem(nome))
             self.tabela.setItem(row, 2, QTableWidgetItem(idade))
+        
+        # Botões relacionados à tabela
+        self.btn_editar_cabecalhos = QPushButton("Editar Cabeçalhos")
+        self.btn_editar_cabecalhos.clicked.connect(self.abrir_janela_edicao_cabecalhos)
+        
+        self.btn_adicionar_coluna = QPushButton("Adicionar Coluna")
+        self.btn_adicionar_coluna.clicked.connect(self.adicionar_coluna)
+        
+        self.btn_adicionar_linha = QPushButton("Adicionar Linha")
+        self.btn_adicionar_linha.clicked.connect(self.adicionar_linha)
+        
+        self.btn_deletar_linha = QPushButton("Deletar Linha")
+        self.btn_deletar_linha.clicked.connect(self.deletar_linha)
+        
+        self.btn_deletar_coluna = QPushButton("Deletar Coluna")
+        self.btn_deletar_coluna.clicked.connect(self.deletar_coluna)
+        
+        # Layout para os botões da tabela
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.btn_editar_cabecalhos)
+        button_layout.addWidget(self.btn_adicionar_coluna)
+        button_layout.addWidget(self.btn_adicionar_linha)
+        button_layout.addWidget(self.btn_deletar_linha)
+        button_layout.addWidget(self.btn_deletar_coluna)
+        
+        # Adicionando a tabela e os botões ao layout principal
         layout.addWidget(self.tabela)
+        layout.addLayout(button_layout)
+
+    def abrir_janela_edicao_cabecalhos(self):
+        # Janela para editar cabeçalhos
+        self.janela_edicao = QDialog(self)
+        self.janela_edicao.setWindowTitle("Editar Cabeçalhos")
+        layout = QVBoxLayout(self.janela_edicao)
+
+        # Campos de texto para editar cada cabeçalho
+        self.campos_cabecalhos = []
+        for col in range(self.tabela.columnCount()):
+            campo = QLineEdit(self.tabela.horizontalHeaderItem(col).text())
+            layout.addWidget(QLabel(f"Cabeçalho {col + 1}:"))
+            layout.addWidget(campo)
+            self.campos_cabecalhos.append(campo)
+
+        # Botão para aplicar as mudanças
+        btn_aplicar = QPushButton("Aplicar")
+        btn_aplicar.clicked.connect(self.aplicar_mudancas_cabecalhos)
+        layout.addWidget(btn_aplicar)
+
+        self.janela_edicao.exec_()
+
+    def aplicar_mudancas_cabecalhos(self):
+        # Aplica as mudanças nos cabeçalhos
+        for col, campo in enumerate(self.campos_cabecalhos):
+            self.tabela.setHorizontalHeaderItem(col, QTableWidgetItem(campo.text()))
+        self.janela_edicao.close()
+
+    def adicionar_coluna(self):
+        # Adiciona uma nova coluna à tabela
+        coluna_atual = self.tabela.columnCount()
+        self.tabela.setColumnCount(coluna_atual + 1)
+        self.tabela.setHorizontalHeaderItem(coluna_atual, QTableWidgetItem(f"Coluna {coluna_atual + 1}"))
+
+    def adicionar_linha(self):
+        # Adiciona uma nova linha à tabela
+        linha_atual = self.tabela.rowCount()
+        self.tabela.setRowCount(linha_atual + 1)
+
+    def deletar_linha(self):
+        # Deleta a linha selecionada
+        linha_selecionada = self.tabela.currentRow()
+        if linha_selecionada >= 0:
+            self.tabela.removeRow(linha_selecionada)
+
+    def deletar_coluna(self):
+        # Deleta a coluna selecionada
+        coluna_selecionada = self.tabela.currentColumn()
+        if coluna_selecionada >= 0:
+            self.tabela.removeColumn(coluna_selecionada)
 
 class NotificacoesApp(QWidget):
     def __init__(self):
