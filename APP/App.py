@@ -5,33 +5,35 @@ from PyQt5.QtWidgets import *
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.modo_escuro = True  # Garantindo que o modo inicial seja o escuro
-        self.initUI()
+        self.modo_escuro = True  # Define o modo inicial como escuro
+        self.initUI()  # Inicializa a interface do usuário
     
+
     def initUI(self):
-        # Configurações iniciais da janela
+        # Configurações iniciais da janela principal
         self.setWindowTitle("Sistema Completo com PyQt5")
-        self.setGeometry(100, 100, 1200, 800)  # Aumentei o tamanho da janela
+        self.setGeometry(100, 100, 1200, 800)  # Define o tamanho da janela
         
+        # Widget central que contém o layout principal
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         
-        # Layout principal (vertical)
+        # Layout principal (vertical) para organizar os widgets
         self.layout = QVBoxLayout(self.central_widget)
         
-        # Criando um widget para alternar entre páginas
+        # Widget de pilha para alternar entre diferentes páginas
         self.stack = QStackedWidget()
         self.layout.addWidget(self.stack)
 
-        # Criando instâncias das diferentes páginas da aplicação
-        self.inicial_page = InicialApp()
-        self.tabela_page = TabelaApp()
-        self.notificacoes_page = NotificacoesApp()
-        self.em_andamento4_page = EmAndamento4App()
-        self.em_andamento5_page = EmAndamento5App()
-        self.config_page = ConfiguracoesApp()
+        # Cria instâncias das diferentes páginas da aplicação
+        self.inicial_page = InicialApp()  # Página inicial
+        self.tabela_page = TabelaApp()  # Página da tabela
+        self.notificacoes_page = NotificacoesApp()  # Página de notificações
+        self.em_andamento4_page = EmAndamento4App()  # Página em andamento 4
+        self.em_andamento5_page = EmAndamento5App()  # Página em andamento 5
+        self.config_page = ConfiguracoesApp()  # Página de configurações
 
-        # Adicionando as páginas ao stack de widgets
+        # Adiciona as páginas ao widget de pilha
         self.stack.addWidget(self.inicial_page)
         self.stack.addWidget(self.tabela_page)
         self.stack.addWidget(self.notificacoes_page)
@@ -39,7 +41,7 @@ class MainApp(QMainWindow):
         self.stack.addWidget(self.em_andamento5_page)
         self.stack.addWidget(self.config_page)
 
-        # Criando botões para navegação entre as páginas
+        # Cria botões para navegação entre as páginas
         self.btn_inicial = QPushButton("Início")
         self.btn_tabela = QPushButton("Tabela")
         self.btn_notificacoes = QPushButton("Notificações")
@@ -47,7 +49,7 @@ class MainApp(QMainWindow):
         self.btn_em_andamento5 = QPushButton("Em andamento 5")
         self.btn_config = QPushButton("Configurações")
         
-        # Conectando os botões às funções para alternar as páginas
+        # Conecta os botões às funções para alternar as páginas
         self.btn_inicial.clicked.connect(lambda: self.stack.setCurrentWidget(self.inicial_page))
         self.btn_tabela.clicked.connect(lambda: self.stack.setCurrentWidget(self.tabela_page))
         self.btn_notificacoes.clicked.connect(lambda: self.stack.setCurrentWidget(self.notificacoes_page))
@@ -55,7 +57,7 @@ class MainApp(QMainWindow):
         self.btn_em_andamento5.clicked.connect(lambda: self.stack.setCurrentWidget(self.em_andamento5_page))
         self.btn_config.clicked.connect(lambda: self.stack.setCurrentWidget(self.config_page))
 
-        # Layout para organizar os botões na parte inferior (horizontal)
+        # Layout horizontal para organizar os botões na parte inferior
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.btn_inicial)
         button_layout.addWidget(self.btn_tabela)
@@ -64,18 +66,19 @@ class MainApp(QMainWindow):
         button_layout.addWidget(self.btn_em_andamento5)
         button_layout.addWidget(self.btn_config)
 
-        # Adicionando um espaçador para empurrar os botões para a esquerda
+        # Adiciona um espaçador para empurrar os botões para a esquerda
         button_layout.addStretch()
 
-        # Adicionando o layout de botões na parte inferior do layout principal
+        # Adiciona o layout de botões na parte inferior do layout principal
         self.layout.addStretch()  # Adiciona um espaçador para empurrar os botões para baixo
         self.layout.addLayout(button_layout)
 
-        # Aplica o tema escuro diretamente ao iniciar
+        # Aplica o tema escuro ao iniciar a aplicação
         self.aplicar_tema_escuro()
 
+
     def aplicar_tema_escuro(self):
-        # Estilo do tema escuro
+        # Define o estilo do tema escuro
         estilo = """
         QWidget { background-color: #2E2E2E; color: white; }
         QPushButton { background-color: #444; color: white; border-radius: 5px; padding: 8px; }
@@ -84,57 +87,62 @@ class MainApp(QMainWindow):
         QHeaderView::section { background-color: #444; color: white; padding: 5px; }
         """
         
-        # Aplica o estilo escuro
+        # Aplica o estilo escuro à aplicação
         self.setStyleSheet(estilo)
 
+
     def closeEvent(self, event):
-        # Janela de confirmação antes de fechar
+        # Exibe uma janela de confirmação antes de fechar a aplicação
         resposta = QMessageBox.question(self, "Sair", "Tem certeza que deseja sair?",
                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if resposta == QMessageBox.Yes:
-            event.accept()  # Aceita o fechamento da janela
+            event.accept()  # Fecha a janela
         else:
-            event.ignore()  # Ignora o fechamento da janela
+            event.ignore()  # Mantém a janela aberta
 
 # Páginas individuais da aplicação
 class InicialApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Interface Inicial"))
+        label = QLabel("Interface Inicial")
+        label.setStyleSheet("font-size: 24px; font-weight: bold;")  # Aumenta o tamanho da fonte
+        layout.addWidget(label)
+        layout.addStretch()  # Adiciona um espaçador para ocupar o espaço restante
+
 
 class TabelaApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
         
-        # Tabela
+        # Cria uma tabela com 3 colunas e 3 linhas
         self.tabela = QTableWidget()
         self.tabela.setColumnCount(3)
         self.tabela.setHorizontalHeaderLabels(["ID", "Nome", "Idade"])
         self.tabela.setRowCount(3)
         
-        # Definindo o tamanho fixo da tabela para melhorar a visualização
-        self.tabela.setFixedSize(1000, 600)  # Tamanho fixo para a tabela (largura 1000px, altura 600px)
+        # Define o tamanho fixo da tabela para melhorar a visualização
+        self.tabela.setFixedSize(1000, 600)  # Largura 1000px, altura 600px
         
-        # Ajustando as larguras das colunas
+        # Ajusta as larguras das colunas
         self.tabela.setColumnWidth(0, 300)  # Largura da Coluna 1 (ID)
         self.tabela.setColumnWidth(1, 350)  # Largura da Coluna 2 (Nome)
         self.tabela.setColumnWidth(2, 350)  # Largura da Coluna 3 (Idade)
         
-        # Ajustando a altura das linhas
+        # Ajusta a altura das linhas
         self.tabela.setRowHeight(0, 50)
         self.tabela.setRowHeight(1, 50)
         self.tabela.setRowHeight(2, 50)
         
-        # Adicionando dados na tabela
+        # Adiciona dados na tabela
         dados = [("1", "Fulano", "25"), ("2", "Deltrano", "30"), ("3", "Ciclano", "22")]
         for row, (id_val, nome, idade) in enumerate(dados):
             self.tabela.setItem(row, 0, QTableWidgetItem(id_val))
             self.tabela.setItem(row, 1, QTableWidgetItem(nome))
             self.tabela.setItem(row, 2, QTableWidgetItem(idade))
         
-        # Botões relacionados à tabela
+        # Cria botões para manipulação da tabela
         self.btn_editar_cabecalhos = QPushButton("Editar Cabeçalhos")
         self.btn_editar_cabecalhos.clicked.connect(self.abrir_janela_edicao_cabecalhos)
         
@@ -150,7 +158,7 @@ class TabelaApp(QWidget):
         self.btn_deletar_coluna = QPushButton("Deletar Coluna")
         self.btn_deletar_coluna.clicked.connect(self.deletar_coluna)
         
-        # Layout para os botões da tabela
+        # Layout horizontal para os botões da tabela
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.btn_editar_cabecalhos)
         button_layout.addWidget(self.btn_adicionar_coluna)
@@ -158,19 +166,18 @@ class TabelaApp(QWidget):
         button_layout.addWidget(self.btn_deletar_linha)
         button_layout.addWidget(self.btn_deletar_coluna)
         
-        # Adicionando a tabela e os botões ao layout principal
+        # Adiciona a tabela e os botões ao layout principal
         layout.addWidget(self.tabela)
         layout.addLayout(button_layout)
         
-        
 
     def abrir_janela_edicao_cabecalhos(self):
-        # Janela para editar cabeçalhos
+        # Cria uma janela de diálogo para editar os cabeçalhos da tabela
         self.janela_edicao = QDialog(self)
         self.janela_edicao.setWindowTitle("Editar Cabeçalhos")
         layout = QVBoxLayout(self.janela_edicao)
 
-        # Campos de texto para editar cada cabeçalho
+        # Cria campos de texto para editar cada cabeçalho
         self.campos_cabecalhos = []
         for col in range(self.tabela.columnCount()):
             campo = QLineEdit(self.tabela.horizontalHeaderItem(col).text())
@@ -178,18 +185,20 @@ class TabelaApp(QWidget):
             layout.addWidget(campo)
             self.campos_cabecalhos.append(campo)
 
-        # Botão para aplicar as mudanças
+        # Botão para aplicar as mudanças nos cabeçalhos
         btn_aplicar = QPushButton("Aplicar")
         btn_aplicar.clicked.connect(self.aplicar_mudancas_cabecalhos)
         layout.addWidget(btn_aplicar)
 
         self.janela_edicao.exec_()
 
+
     def aplicar_mudancas_cabecalhos(self):
-        # Aplica as mudanças nos cabeçalhos
+        # Aplica as mudanças nos cabeçalhos da tabela
         for col, campo in enumerate(self.campos_cabecalhos):
             self.tabela.setHorizontalHeaderItem(col, QTableWidgetItem(campo.text()))
         self.janela_edicao.close()
+
 
     def adicionar_coluna(self):
         # Adiciona uma nova coluna à tabela
@@ -197,50 +206,58 @@ class TabelaApp(QWidget):
         self.tabela.setColumnCount(coluna_atual + 1)
         self.tabela.setHorizontalHeaderItem(coluna_atual, QTableWidgetItem(f"Coluna {coluna_atual + 1}"))
 
+
     def adicionar_linha(self):
         # Adiciona uma nova linha à tabela
         linha_atual = self.tabela.rowCount()
         self.tabela.setRowCount(linha_atual + 1)
 
+
     def deletar_linha(self):
-        # Deleta a linha selecionada
+        # Remove a linha selecionada da tabela
         linha_selecionada = self.tabela.currentRow()
         if linha_selecionada >= 0:
             self.tabela.removeRow(linha_selecionada)
 
+
     def deletar_coluna(self):
-        # Deleta a coluna selecionada
+        # Remove a coluna selecionada da tabela
         coluna_selecionada = self.tabela.currentColumn()
         if coluna_selecionada >= 0:
             self.tabela.removeColumn(coluna_selecionada)
+
 
 class NotificacoesApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Sistema de Notificações"))
+        layout.addWidget(QLabel("Sistema de Notificações"))  # Adiciona um rótulo à página de notificações
+
 
 class EmAndamento4App(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Em Andamento 4"))
+        layout.addWidget(QLabel("Em Andamento 4"))  # Adiciona um rótulo à página em andamento 4
+
 
 class EmAndamento5App(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Em Andamento 5"))
+        layout.addWidget(QLabel("Em Andamento 5"))  # Adiciona um rótulo à página em andamento 5
+
 
 class ConfiguracoesApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Configurações do Sistema"))
+        layout.addWidget(QLabel("Configurações do Sistema"))  # Adiciona um rótulo à página de configurações
+
 
 # Inicialização da aplicação
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MainApp()
-    window.show()
-    sys.exit(app.exec_())
+    window = MainApp()  # Cria a janela principal
+    window.show()  # Exibe a janela
+    sys.exit(app.exec_())  # Executa o loop de eventos da aplicação
