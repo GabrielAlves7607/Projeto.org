@@ -2,9 +2,9 @@ import sys
 import subprocess
 import os
 
+#------------------------------------------------------------------------------------------------------------------------------------------
 # Bibliotecas necessárias para o programa
 pacotes = ["PyQt5", "werkzeug"]
-
 
 def instalar_pacotes():
     for pacote in pacotes:
@@ -13,7 +13,6 @@ def instalar_pacotes():
             print(f"Pacote '{pacote}' instalado com sucesso!")
         except subprocess.CalledProcessError:
             print(f"Erro ao instalar o pacote '{pacote}'.")
-
 
 try:
     from PyQt5.QtWidgets import QApplication, QWidget
@@ -26,16 +25,14 @@ except ImportError:
     subprocess.check_call([sys.executable, __file__])
     sys.exit()
 
-
 print("Todos os pacotes estão instalados. Iniciando o aplicativo...")
-
+#------------------------------------------------------------------------------------------------------------------------------------------
 
 import sqlite3
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 class UserDatabase:
@@ -44,7 +41,6 @@ class UserDatabase:
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
         self.create_table()
-
 
     def create_table(self):
         """Cria a tabela de usuários se não existir"""
@@ -56,7 +52,6 @@ class UserDatabase:
             )
         ''')
         self.conn.commit()
-
 
     def add_user(self, username, password):
         """Adiciona um novo usuário ao banco de dados"""
@@ -73,14 +68,12 @@ class UserDatabase:
         print(f"Usuário '{username}' cadastrado com sucesso!")
         return True
 
-
     def user_exists(self, username):
         """Verifica se um usuário já existe no banco de dados"""
         self.cursor.execute('''
             SELECT 1 FROM users WHERE username = ?
         ''', (username,))
         return self.cursor.fetchone() is not None
-
 
     def verify_user(self, username, password):
         """Verifica se as credenciais do usuário estão corretas"""
@@ -92,7 +85,6 @@ class UserDatabase:
         if result and check_password_hash(result[0], password):
             return True
         return False
-
 
     def close(self):
         """Fecha a conexão com o banco de dados"""
@@ -106,56 +98,53 @@ class LoginApp(QWidget):
         self.db = UserDatabase()  # Instanciando a classe UserDatabase
         self.initUI()
 
-
     def initUI(self):
         self.setWindowTitle('Login')
         self.setGeometry(100, 100, 400, 300)
 
-        # Aplicar estilo escuro com detalhes azuis
+        # Aplicar novo estilo com as cores fornecidas
         self.setStyleSheet("""
             QWidget {
-                background-color: #2E3440;
-                color: #ECEFF4;
+                background-color: #2E2E2E;
+                color: white;
             }
             QLabel {
-                color: #ECEFF4;
+                color: white;
             }
             QLineEdit {
-                background-color: #4C566A;
-                color: #ECEFF4;
-                border: 1px solid #81A1C1;
+                background-color: #444;
+                color: white;
+                border: 1px solid #555;
                 border-radius: 5px;
                 padding: 5px;
             }
             QPushButton {
-                background-color: #81A1C1;
-                color: #2E3440;
+                background-color: #3B3B3B;
+                color: white;
                 border: none;
                 border-radius: 5px;
                 padding: 10px;
                 font-weight: bold;
             }
             QPushButton:hover {
-                background-color: #5E81AC;
+                background-color: #555;
             }
             QCheckBox {
-                color: #ECEFF4;
+                color: white;
             }
             QCheckBox::indicator {
                 width: 15px;
                 height: 15px;
-                border: 1px solid #81A1C1;
+                border: 1px solid #555;
                 border-radius: 3px;
-                background-color: #4C566A;
+                background-color: #444;
             }
             QCheckBox::indicator:checked {
-                background-color: #81A1C1;
+                background-color: #3B3B3B;
             }
         """)
 
-
         layout = QVBoxLayout()
-
 
         # Título "FAÇA SEU LOGIN"
         self.label_title = QLabel('FAÇA SEU LOGIN')
@@ -180,11 +169,6 @@ class LoginApp(QWidget):
         layout.addWidget(self.label_password)
         layout.addWidget(self.input_password)
 
-        # Checkbox "Lembrar-me"
-        self.checkbox_remember = QCheckBox('Lembrar-me')
-        self.checkbox_remember.setFont(QFont('Arial', 10))
-        layout.addWidget(self.checkbox_remember)
-
         # Botão "Entrar"
         self.button_login = QPushButton('Entrar')
         self.button_login.setFont(QFont('Arial', 12))
@@ -199,7 +183,6 @@ class LoginApp(QWidget):
 
         self.setLayout(layout)
 
-
     def on_login(self):
         email = self.input_email.text()
         password = self.input_password.text()
@@ -213,14 +196,13 @@ class LoginApp(QWidget):
             # Fecha a janela de login
             self.close()
             # Executa o script Test_Pyqt5.py
-            caminho_script = os.path.join(os.path.dirname(__file__), "Test_Pyqt5.py")
+            caminho_script = os.path.join(os.path.dirname(__file__), "App.py")
             if not os.path.isfile(caminho_script):
                 QMessageBox.warning(self, 'Erro', f"Arquivo '{caminho_script}' não encontrado.")
                 return
             subprocess.Popen([sys.executable, caminho_script])
         else:
             QMessageBox.warning(self, 'Erro', 'Credenciais inválidas.')
-
 
     def on_register(self):
         email = self.input_email.text()
@@ -234,7 +216,6 @@ class LoginApp(QWidget):
             QMessageBox.information(self, 'Sucesso', f"Usuário '{email}' cadastrado com sucesso!")
         else:
             QMessageBox.warning(self, 'Erro', 'Nome de usuário já existe. Escolha outro nome.')
-
 
     def closeEvent(self, event):
         self.db.close()
