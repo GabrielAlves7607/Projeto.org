@@ -1,85 +1,78 @@
 import sys
 from PyQt5.QtWidgets import *
+import requests
+import threading
 
-
-# Classe principal da aplicação
+# === CLASSE PRINCIPAL DA APLICAÇÃO ===
 class MainApp(QMainWindow):
+    """
+    Classe principal responsável pela janela e pela navegação entre páginas do sistema.
+    """
+
     def __init__(self):
         super().__init__()
-        self.modo_escuro = True  # Define o modo inicial como escuro
-        self.initUI()  # Inicializa a interface do usuário
-    
+        self.modo_escuro = True  # Define se o tema escuro está ativado
+        self.initUI()  # Inicializa a interface gráfica
 
     def initUI(self):
-        # Configurações iniciais da janela principal
+        """
+        Método responsável por configurar toda a interface gráfica da aplicação.
+        """
         self.setWindowTitle("Sistema Completo com PyQt5")
-        self.setGeometry(100, 100, 1200, 800)  # Define o tamanho da janela
-        
+        self.setGeometry(100, 100, 1200, 800)
 
-        # Widget central que contém o layout principal
+        # Define o widget central da janela
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-        
 
-        # Layout principal (vertical) para organizar os widgets
+        # Layout principal vertical
         self.layout = QVBoxLayout(self.central_widget)
-        
 
-        # Widget de pilha para alternar entre diferentes páginas
+        # Widget de páginas empilhadas para navegação
         self.stack = QStackedWidget()
         self.layout.addWidget(self.stack)
 
+        # Instancia cada página da aplicação
+        self.inicial_page = InicialApp()
+        self.tabela_page = TabelaApp()
+        self.notificacoes_page = ConversãoApp()
+        self.em_andamento4_page = ChatBotIAApp()
 
-        # Cria instâncias das diferentes páginas da aplicação
-        self.inicial_page = InicialApp()  # Página inicial
-        self.tabela_page = TabelaApp()  # Página da tabela
-        self.notificacoes_page = ConversãoApp()  # Página de Conversão
-        self.em_andamento4_page = ChatBotIAApp()  # Página de chat IA
-
-
-        # Adiciona as páginas ao widget de pilha
+        # Adiciona páginas ao stack
         self.stack.addWidget(self.inicial_page)
         self.stack.addWidget(self.tabela_page)
         self.stack.addWidget(self.notificacoes_page)
         self.stack.addWidget(self.em_andamento4_page)
- 
 
-        # Cria botões para navegação entre as páginas
+        # Criação de botões para navegação
         self.btn_inicial = QPushButton("Início")
         self.btn_tabela = QPushButton("Tabela")
         self.btn_notificacoes = QPushButton("Conversor")
         self.btn_em_andamento4 = QPushButton("ChatBot")
-        
-        # Conecta os botões às funções para alternar as páginas
+
+        # Conecta os botões às páginas
         self.btn_inicial.clicked.connect(lambda: self.stack.setCurrentWidget(self.inicial_page))
         self.btn_tabela.clicked.connect(lambda: self.stack.setCurrentWidget(self.tabela_page))
         self.btn_notificacoes.clicked.connect(lambda: self.stack.setCurrentWidget(self.notificacoes_page))
         self.btn_em_andamento4.clicked.connect(lambda: self.stack.setCurrentWidget(self.em_andamento4_page))
 
-
-        # Layout horizontal para organizar os botões na parte inferior
+        # Layout horizontal para os botões de navegação
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.btn_inicial)
         button_layout.addWidget(self.btn_tabela)
         button_layout.addWidget(self.btn_notificacoes)
         button_layout.addWidget(self.btn_em_andamento4)
+        button_layout.addStretch()  # Alinha os botões à esquerda
 
-
-        # Adiciona um espaçador para empurrar os botões para a esquerda
-        button_layout.addStretch()
-
-
-        # Adiciona o layout de botões na parte inferior do layout principal
-        self.layout.addStretch()  # Adiciona um espaçador para empurrar os botões para baixo
+        self.layout.addStretch()  # Empurra o conteúdo para o topo
         self.layout.addLayout(button_layout)
 
-
-        # Aplica o tema escuro ao iniciar a aplicação
-        self.aplicar_tema_escuro()
-
+        self.aplicar_tema_escuro()  # Aplica tema escuro ao iniciar
 
     def aplicar_tema_escuro(self):
-        # Define o estilo do tema escuro
+        """
+        Define o estilo visual da aplicação em modo escuro.
+        """
         estilo = """
         QWidget { background-color: #2E2E2E; color: white; }
         QPushButton { background-color: #444; color: white; border-radius: 5px; padding: 8px; }
@@ -87,99 +80,94 @@ class MainApp(QMainWindow):
         QTableWidget { background-color: #3B3B3B; color: white; gridline-color: #555; }
         QHeaderView::section { background-color: #444; color: white; padding: 5px; }
         """
-        
-        # Aplica o estilo escuro à aplicação
         self.setStyleSheet(estilo)
 
-
     def closeEvent(self, event):
-        # Exibe uma janela de confirmação antes de fechar a aplicação
-        resposta = QMessageBox.question(self, "Sair", "Tem certeza que deseja sair?",
-                                       QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        """
+        Exibe uma caixa de diálogo de confirmação antes de fechar a aplicação.
+        """
+        resposta = QMessageBox.question(
+            self, "Sair", "Tem certeza que deseja sair?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
         if resposta == QMessageBox.Yes:
-            event.accept()  # Fecha a janela
+            event.accept()
         else:
-            event.ignore()  # Mantém a janela aberta
+            event.ignore()
 
 
-# Páginas individuais da aplicação
+# === PÁGINA INICIAL ===
 class InicialApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
         label = QLabel("Interface Inicial")
-        label.setStyleSheet("font-size: 24px; font-weight: bold;")  # Aumenta o tamanho da fonte
+        label.setStyleSheet("font-size: 24px; font-weight: bold;")
         layout.addWidget(label)
-        layout.addStretch()  # Adiciona um espaçador para ocupar o espaço restante
+        layout.addStretch()
 
 
+# === PÁGINA DE TABELA ===
 class TabelaApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        
-        # Cria uma tabela com 3 colunas e 3 linhas
+
+        # Tabela principal com 3 colunas e 3 linhas
         self.tabela = QTableWidget()
         self.tabela.setColumnCount(3)
         self.tabela.setHorizontalHeaderLabels(["ID", "Nome", "Idade"])
         self.tabela.setRowCount(3)
-        
-        # Define o tamanho fixo da tabela para melhorar a visualização
-        self.tabela.setFixedSize(1000, 600)  # Largura 1000px, altura 600px
-        
-        # Ajusta as larguras das colunas
-        self.tabela.setColumnWidth(0, 300)  # Largura da Coluna 1 (ID)
-        self.tabela.setColumnWidth(1, 350)  # Largura da Coluna 2 (Nome)
-        self.tabela.setColumnWidth(2, 350)  # Largura da Coluna 3 (Idade)
-        
-        # Ajusta a altura das linhas
+        self.tabela.setFixedSize(1000, 600)
+        self.tabela.setColumnWidth(0, 300)
+        self.tabela.setColumnWidth(1, 350)
+        self.tabela.setColumnWidth(2, 350)
         self.tabela.setRowHeight(0, 50)
         self.tabela.setRowHeight(1, 50)
         self.tabela.setRowHeight(2, 50)
-        
-        # Adiciona dados na tabela
+
+        # Preenchendo dados iniciais
         dados = [("1", "Fulano", "25"), ("2", "Deltrano", "30"), ("3", "Ciclano", "22")]
         for row, (id_val, nome, idade) in enumerate(dados):
             self.tabela.setItem(row, 0, QTableWidgetItem(id_val))
             self.tabela.setItem(row, 1, QTableWidgetItem(nome))
             self.tabela.setItem(row, 2, QTableWidgetItem(idade))
-        
-        # Cria botões para manipulação da tabela
+
+        # Botões de controle da tabela
         self.btn_editar_cabecalhos = QPushButton("Editar Cabeçalhos")
         self.btn_editar_cabecalhos.clicked.connect(self.abrir_janela_edicao_cabecalhos)
-        
+
         self.btn_adicionar_coluna = QPushButton("Adicionar Coluna")
         self.btn_adicionar_coluna.clicked.connect(self.adicionar_coluna)
-        
+
         self.btn_adicionar_linha = QPushButton("Adicionar Linha")
         self.btn_adicionar_linha.clicked.connect(self.adicionar_linha)
-        
+
         self.btn_deletar_linha = QPushButton("Deletar Linha")
         self.btn_deletar_linha.clicked.connect(self.deletar_linha)
-        
+
         self.btn_deletar_coluna = QPushButton("Deletar Coluna")
         self.btn_deletar_coluna.clicked.connect(self.deletar_coluna)
-        
-        # Layout horizontal para os botões da tabela
+
+        # Layout dos botões
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.btn_editar_cabecalhos)
         button_layout.addWidget(self.btn_adicionar_coluna)
         button_layout.addWidget(self.btn_adicionar_linha)
         button_layout.addWidget(self.btn_deletar_linha)
         button_layout.addWidget(self.btn_deletar_coluna)
-        
-        # Adiciona a tabela e os botões ao layout principal
+
         layout.addWidget(self.tabela)
         layout.addLayout(button_layout)
-        
 
     def abrir_janela_edicao_cabecalhos(self):
-        # Cria uma janela de diálogo para editar os cabeçalhos da tabela
+        """
+        Abre janela para editar os títulos das colunas da tabela.
+        """
         self.janela_edicao = QDialog(self)
         self.janela_edicao.setWindowTitle("Editar Cabeçalhos")
         layout = QVBoxLayout(self.janela_edicao)
 
-        # Cria campos de texto para editar cada cabeçalho
         self.campos_cabecalhos = []
         for col in range(self.tabela.columnCount()):
             campo = QLineEdit(self.tabela.horizontalHeaderItem(col).text())
@@ -187,64 +175,145 @@ class TabelaApp(QWidget):
             layout.addWidget(campo)
             self.campos_cabecalhos.append(campo)
 
-        # Botão para aplicar as mudanças nos cabeçalhos
         btn_aplicar = QPushButton("Aplicar")
         btn_aplicar.clicked.connect(self.aplicar_mudancas_cabecalhos)
         layout.addWidget(btn_aplicar)
 
         self.janela_edicao.exec_()
 
-
     def aplicar_mudancas_cabecalhos(self):
-        # Aplica as mudanças nos cabeçalhos da tabela
+        """
+        Aplica os novos nomes aos cabeçalhos da tabela.
+        """
         for col, campo in enumerate(self.campos_cabecalhos):
             self.tabela.setHorizontalHeaderItem(col, QTableWidgetItem(campo.text()))
         self.janela_edicao.close()
 
-
     def adicionar_coluna(self):
-        # Adiciona uma nova coluna à tabela
+        """
+        Adiciona uma nova coluna à tabela.
+        """
         coluna_atual = self.tabela.columnCount()
         self.tabela.setColumnCount(coluna_atual + 1)
         self.tabela.setHorizontalHeaderItem(coluna_atual, QTableWidgetItem(f"Coluna {coluna_atual + 1}"))
 
-
     def adicionar_linha(self):
-        # Adiciona uma nova linha à tabela
+        """
+        Adiciona uma nova linha à tabela.
+        """
         linha_atual = self.tabela.rowCount()
         self.tabela.setRowCount(linha_atual + 1)
 
-
     def deletar_linha(self):
-        # Remove a linha selecionada da tabela
+        """
+        Remove a linha atualmente selecionada na tabela.
+        """
         linha_selecionada = self.tabela.currentRow()
         if linha_selecionada >= 0:
             self.tabela.removeRow(linha_selecionada)
 
-
     def deletar_coluna(self):
-        # Remove a coluna selecionada da tabela
+        """
+        Remove a coluna atualmente selecionada na tabela.
+        """
         coluna_selecionada = self.tabela.currentColumn()
         if coluna_selecionada >= 0:
             self.tabela.removeColumn(coluna_selecionada)
 
 
+# === PÁGINA DE CONVERSÃO (PLACEHOLDER) ===
 class ConversãoApp(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Sistema de conversão"))  # Adiciona um rótulo à página de notificações
+        layout.addWidget(QLabel("Sistema de conversão"))
 
 
+# === CHATBOT COM INTEGRAÇÃO OPENROUTER ===
 class ChatBotIAApp(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("ChatBot IA"))  # Adiciona um rótulo à página em andamento 4
+        self.historico = [
+            {"role": "system", "content": "Você é um assistente útil e educado."},
+        ]
+        self.initUI()
 
-# Inicialização da aplicação
+    def initUI(self):
+        layout = QVBoxLayout(self)
+
+        self.chatbox = QTextEdit()
+        self.chatbox.setReadOnly(True)
+        self.chatbox.setStyleSheet("font-size: 14px;")
+        layout.addWidget(self.chatbox)
+
+        self.entrada = QLineEdit()
+        self.entrada.setPlaceholderText("Digite sua mensagem e pressione Enter...")
+        self.entrada.returnPressed.connect(self.responder)
+        layout.addWidget(self.entrada)
+
+        self.btn_enviar = QPushButton("Enviar")
+        self.btn_enviar.clicked.connect(self.responder)
+        layout.addWidget(self.btn_enviar)
+
+    def responder(self):
+        """
+        Captura a mensagem do usuário, exibe na tela e inicia thread de resposta.
+        """
+        user_msg = self.entrada.text().strip()
+        if not user_msg:
+            return
+
+        self.chatbox.append(f"<b>Você:</b> {user_msg}")
+        self.entrada.clear()
+
+        self.historico.append({"role": "user", "content": user_msg})
+        threading.Thread(target=self.responder_em_thread, args=(user_msg,)).start()
+
+    def responder_em_thread(self, user_msg):
+        """
+        Thread para evitar travamentos na UI ao obter resposta da API.
+        """
+        try:
+            resposta = self.gerar_resposta()
+            self.chatbox.append(f"<b>Bot:</b> {resposta}")
+            self.historico.append({"role": "assistant", "content": resposta})
+        except Exception as e:
+            self.chatbox.append(f"<span style='color:red;'>[ERRO] {e}</span>")
+
+        if len(self.historico) > 20:
+            self.historico[:] = [self.historico[0]] + self.historico[-19:]
+
+    def gerar_resposta(self):
+        """
+        Envia o histórico à API da OpenRouter e retorna a resposta gerada pelo modelo.
+        """
+        API_KEY = "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"
+        MODELO = "openai/gpt-3.5-turbo"
+
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "http://localhost",
+            "X-Title": "MeuChatTurbo"
+        }
+
+        payload = {
+            "model": MODELO,
+            "messages": self.historico
+        }
+
+        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+
+        if response.status_code != 200:
+            raise Exception(f"Erro: {response.status_code} - {response.json()}")
+
+        resposta = response.json()
+        return resposta["choices"][0]["message"]["content"].strip()
+
+
+# === INICIALIZAÇÃO DA APLICAÇÃO ===
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = MainApp()  # Cria a janela principal
-    window.show()  # Exibe a janela
-    sys.exit(app.exec_())  # Executa o loop de eventos da aplicação
+    window = MainApp()
+    window.show()
+    sys.exit(app.exec_())
