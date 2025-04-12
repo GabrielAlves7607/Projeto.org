@@ -1,7 +1,21 @@
 import sys
-from PyQt5.QtWidgets import *
-import requests
+import os
 import threading
+import requests
+import pandas as pd
+import PyPDF2
+from PIL import Image
+
+# PyQt5
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QLabel, QStackedWidget, QMessageBox, QTableWidget,
+    QTableWidgetItem, QLineEdit, QDialog, QFileDialog, QFrame,
+    QTextEdit
+)
+
+
 
 # === CLASSE PRINCIPAL DA APLICAÇÃO ===
 class MainApp(QMainWindow):
@@ -221,12 +235,102 @@ class TabelaApp(QWidget):
             self.tabela.removeColumn(coluna_selecionada)
 
 
-# === PÁGINA DE CONVERSÃO (PLACEHOLDER) ===
+# === PÁGINA DE CONVERSÃO (PLACEHOLDER) === 
+# Converte arquivos de imagem .jpg ou .jpeg para .png | Converte arquivos .csv para .xlsx (Excel) | Extrai o texto de um PDF e salva em um arquivo .txt
 class ConversãoApp(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Layout principal
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Sistema de conversão"))
+        layout.setSpacing(20)
+        layout.setContentsMargins(100, 80, 100, 80)
+
+        # Título
+        titulo = QLabel("Conversor de Arquivos")
+        titulo.setStyleSheet("font-size: 28px; font-weight: bold; margin-bottom: 20px;")
+        titulo.setAlignment(Qt.AlignCenter)
+        layout.addWidget(titulo)
+
+        # Informações do arquivo
+        self.label_arquivo = QLabel("Nenhum arquivo selecionado.")
+        self.label_arquivo.setAlignment(Qt.AlignCenter)
+        self.label_arquivo.setStyleSheet("font-size: 16px; padding: 10px; border: 1px solid #666; border-radius: 6px;")
+        layout.addWidget(self.label_arquivo)
+
+        # Botões
+        botoes_layout = QHBoxLayout()
+        self.botao_selecionar = QPushButton("Selecionar Arquivo")
+        self.botao_converter = QPushButton("Converter")
+        self.botao_selecionar.setFixedHeight(40)
+        self.botao_converter.setFixedHeight(40)
+        botoes_layout.addWidget(self.botao_selecionar)
+        botoes_layout.addWidget(self.botao_converter)
+        layout.addLayout(botoes_layout)
+
+        # Linha divisória
+        linha = QFrame()
+        linha.setFrameShape(QFrame.HLine)
+        linha.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(linha)
+
+        # Status
+        self.status = QLabel("")
+        self.status.setAlignment(Qt.AlignCenter)
+        self.status.setStyleSheet("font-size: 14px; color: #00cc66;")
+        layout.addWidget(self.status)
+
+        # Conexões
+        self.botao_selecionar.clicked.connect(self.selecionar_arquivo)
+        self.botao_converter.clicked.connect(self.converter)
+
+        self.arquivo_entrada = ""
+
+    def selecionar_arquivo(self):
+        caminho, _ = QFileDialog.getOpenFileName(self, "Selecionar arquivo")
+        if caminho:
+            self.arquivo_entrada = caminho
+            self.label_arquivo.setText(f"Arquivo selecionado:\n{os.path.basename(caminho)}")
+            self.status.setText("")
+
+    def converter(self):
+        if not self.arquivo_entrada:
+            QMessageBox.warning(self, "Aviso", "Selecione um arquivo primeiro.")
+            return
+
+        nome, extensao = os.path.splitext(self.arquivo_entrada)
+        extensao = extensao.lower()
+
+        try:
+            if extensao in ['.jpg', '.jpeg']:
+                saida = f"{nome}.png"
+                imagem = Image.open(self.arquivo_entrada)
+                imagem.save(saida, 'PNG')
+                self.status.setText(f"Imagem convertida com sucesso:\n{saida}")
+
+            elif extensao == '.csv':
+                saida = f"{nome}.xlsx"
+                df = pd.read_csv(self.arquivo_entrada)
+                df.to_excel(saida, index=False)
+                self.status.setText(f"CSV convertido com sucesso:\n{saida}")
+
+            elif extensao == '.pdf':
+                saida = f"{nome}.txt"
+                with open(self.arquivo_entrada, 'rb') as pdf_file:
+                    leitor = PyPDF2.PdfReader(pdf_file)
+                    texto = ''.join(pagina.extract_text() for pagina in leitor.pages)
+                with open(saida, 'w', encoding='utf-8') as txt_file:
+                    txt_file.write(texto)
+                self.status.setText(f"PDF convertido com sucesso:\n{saida}")
+
+            else:
+                QMessageBox.critical(self, "Erro", f"Extensão não suportada: {extensao}")
+                return
+
+            QMessageBox.information(self, "Sucesso", f"Arquivo convertido com sucesso!")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erro", f"Ocorreu um erro na conversão:\n{str(e)}")
 
 
 # === CHATBOT COM INTEGRAÇÃO OPENROUTER ===
