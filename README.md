@@ -33,7 +33,7 @@ Este é um sistema de interface gráfica feito com **PyQt5** que integra múltip
 🤖 Chatbot com IA
 - Comunicação via API com o modelo **GPT** da [OpenRouter](https://openrouter.ai)
 - Interface integrada ao app com histórico de mensagens
-- 
+  
 ---
 
 ⚙️ Tecnologias Utilizadas
