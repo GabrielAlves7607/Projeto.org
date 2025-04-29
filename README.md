@@ -71,7 +71,7 @@ Para que o chatbot funcione corretamente, é necessário gerar uma API Key no si
 ![Captura de tela 2025-04-28 230640](https://github.com/user-attachments/assets/e7e1c6c1-1ece-406f-b012-92044b87a6c5)
 ![Captura de tela 2025-04-28 230717](https://github.com/user-attachments/assets/1027fdb9-01dd-4c64-a4ce-ae22024217d0)
 
-6- Localize no código a variável onde está "API_KEY" e substitua pelo valor da sua API Key. Aproveite! 🚀
+6 - Localize no código a variável onde está "API_KEY" e substitua pelo valor da sua API Key. Aproveite! 🚀
 ![Captura de tela 2025-04-28 230820](https://github.com/user-attachments/assets/b2826490-3224-4c13-9733-10b1ed1dc870)
 
 
