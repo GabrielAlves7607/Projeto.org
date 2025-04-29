@@ -51,16 +51,18 @@ Este é um sistema de interface gráfica feito com **PyQt5** que integra múltip
 Para que o chatbot funcione corretamente, é necessário gerar uma API Key no site da OpenRouter. Siga os passos abaixo:
 
 1 - Acesse o site da OpenRouter e faça login na sua conta.
-![Captura de tela 2025-04-28 230413](https://github.com/user-attachments/assets/18909833-0bfc-4680-b1a3-3848f7fcf754)
+![Captura de tela 2025-04-28 230413](https://github.com/user-attachments/assets/163953d6-e2b7-4db0-8564-0c15a38ff762)
 
 2 - Clique no menu (três barrinhas no canto) e selecione "Keys".
-![Captura de tela 2025-04-28 230431](https://github.com/user-attachments/assets/0dde583d-68c8-45df-842c-5dff3c1a3890)
+![Captura de tela 2025-04-28 230431](https://github.com/user-attachments/assets/3744ff6d-2928-4f57-8378-9e5f61b9682c)
 
 3 - Crie uma nova API Key preenchendo apenas o campo de nome.
 (A OpenRouter oferece alguns pontos para começar a usar o chatbot!)
-![Captura de tela 2025-04-28 230445](https://github.com/user-attachments/assets/98f83750-a30f-4cff-8d23-cfc3e8253cbf)
-![Captura de tela 2025-04-28 230459](https://github.com/user-attachments/assets/b4046248-31ea-41e9-8231-7ca42e37675f)
-![Captura de tela 2025-04-28 230556](https://github.com/user-attachments/assets/d99ff733-3f22-422c-be16-928f61d26b3c)
+![Captura de tela 2025-04-28 230445](https://github.com/user-attachments/assets/176bcfce-34ad-472f-97b7-c5636ecad952)
+
+![Captura de tela 2025-04-28 230459](https://github.com/user-attachments/assets/0dfc4840-c7e6-46a3-8b57-f56fb483684b)
+
+![Captura de tela 2025-04-28 230556](https://github.com/user-attachments/assets/2fdb5dce-b342-4872-84b4-628af3111bd6)
 
 4 - Copie a API Key gerada.
 ![Captura de tela 2025-04-28 232709](https://github.com/user-attachments/assets/8d5e02f1-a545-473c-9ce8-c4e53aead7fc)
@@ -70,5 +72,6 @@ Para que o chatbot funcione corretamente, é necessário gerar uma API Key no si
 ![Captura de tela 2025-04-28 230717](https://github.com/user-attachments/assets/1027fdb9-01dd-4c64-a4ce-ae22024217d0)
 
 6- Localize no código a variável onde está "API_KEY" e substitua pelo valor da sua API Key. Aproveite! 🚀
-![Captura de tela 2025-04-28 230820](https://github.com/user-attachments/assets/dda343c4-3315-45dd-8427-1a401ef9e5f0)
+![Captura de tela 2025-04-28 230820](https://github.com/user-attachments/assets/b2826490-3224-4c13-9733-10b1ed1dc870)
+
 
